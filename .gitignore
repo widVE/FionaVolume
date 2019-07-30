@@ -1,0 +1,5 @@
+#ignore all TIFF files
+*.tif
+
+#ignore all raws
+*.raw

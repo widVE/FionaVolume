@@ -1,0 +1,194 @@
+﻿Build started 4/26/2019 1:30:03 PM.
+     1>Project "S:\apps\dual_test\FionaVolume\FionaVolume.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I..\FionaLib /I..\FionaLib\include /Zi /nologo /W3 /WX- /O2 /Oi /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt FionaVolume.cpp FionaVolumeReader.cpp fromSPIM\AABB.cpp fromSPIM\BeadDetection.cpp fromSPIM\Config.cpp fromSPIM\Framebuffer.cpp fromSPIM\GeometryImage.cpp fromSPIM\InteractionVolume.cpp fromSPIM\Layout.cpp fromSPIM\OrbitCamera.cpp fromSPIM\Ray.cpp fromSPIM\Shader.cpp fromSPIM\SimplePointcloud.cpp fromSPIM\SpimStack.cpp fromSPIM\StackRegistration.cpp fromSPIM\StackTransformationSolver.cpp fromSPIM\Threshold.cpp fromSPIM\tinyxml2.cpp fromSPIM\Widget.cpp main.cpp
+         FionaVolume.cpp
+     1>s:\apps\dual_test\fionavolume\FionaVolumeReader.h(70): warning C4313: 'printf'  : '%x' in format string conflicts with argument 1 of type 'char *'
+     1>s:\apps\dual_test\fionavolume\FionaVolumeReader.h(71): warning C4313: 'printf'  : '%x' in format string conflicts with argument 1 of type 'char *'
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(40): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(41): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(42): warning C4172: returning address of local variable or temporary
+     1>FionaVolume.cpp(86): warning C4552: '!=' : operator has no effect; expected operator with side-effect
+     1>FionaVolume.cpp(252): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
+     1>FionaVolume.cpp(254): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
+     1>FionaVolume.cpp(366): warning C4551: function call missing argument list
+     1>FionaVolume.cpp(423): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
+     1>FionaVolume.cpp(427): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
+         FionaVolumeReader.cpp
+     1>s:\apps\dual_test\fionavolume\FionaVolumeReader.h(70): warning C4313: 'printf'  : '%x' in format string conflicts with argument 1 of type 'char *'
+     1>s:\apps\dual_test\fionavolume\FionaVolumeReader.h(71): warning C4313: 'printf'  : '%x' in format string conflicts with argument 1 of type 'char *'
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(40): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(41): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(42): warning C4172: returning address of local variable or temporary
+     1>FionaVolumeReader.cpp(64): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+     1>FionaVolumeReader.cpp(82): warning C4313: 'printf'  : '%x' in format string conflicts with argument 1 of type 'char *'
+         AABB.cpp
+         BeadDetection.cpp
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(40): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(41): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(42): warning C4172: returning address of local variable or temporary
+     1>fromSPIM\BeadDetection.cpp(39): warning C4267: 'argument' : conversion from 'size_t' to 'GLsizei', possible loss of data
+         Config.cpp
+         Framebuffer.cpp
+         GeometryImage.cpp
+         InteractionVolume.cpp
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(40): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(41): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(42): warning C4172: returning address of local variable or temporary
+         GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         Layout.cpp
+         OrbitCamera.cpp
+         GLM: perspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         GLM: perspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         Ray.cpp
+         Shader.cpp
+         SimplePointcloud.cpp
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(40): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(41): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(42): warning C4172: returning address of local variable or temporary
+         SpimStack.cpp
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(40): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(41): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(42): warning C4172: returning address of local variable or temporary
+     1>fromSPIM\SpimStack.cpp(963): warning C4244: 'initializing' : conversion from 'long double' to 'const float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(964): warning C4244: 'initializing' : conversion from 'long double' to 'const float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1332): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1333): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1334): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1338): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1339): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1340): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1345): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1346): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1347): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>fromSPIM\SpimStack.cpp(1365): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+         GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         StackRegistration.cpp
+     1>fromSPIM\StackRegistration.cpp(188): warning C4267: 'argument' : conversion from 'size_t' to 'GLsizei', possible loss of data
+         StackTransformationSolver.cpp
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(40): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(41): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(42): warning C4172: returning address of local variable or temporary
+     1>fromSPIM\StackTransformationSolver.cpp(248): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>fromSPIM\StackTransformationSolver.cpp(609): warning C4267: 'argument' : conversion from 'size_t' to 'glm::length_t', possible loss of data
+     1>fromSPIM\StackTransformationSolver.cpp(610): warning C4244: '=' : conversion from 'const double' to 'float', possible loss of data
+     1>fromSPIM\StackTransformationSolver.cpp(612): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
+     1>fromSPIM\StackTransformationSolver.cpp(613): warning C4244: '/=' : conversion from 'double' to 'float', possible loss of data
+         GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         Threshold.cpp
+         tinyxml2.cpp
+         Widget.cpp
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(40): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(41): warning C4172: returning address of local variable or temporary
+     1>s:\apps\dual_test\fionavolume\fromspim\InteractionVolume.h(42): warning C4172: returning address of local variable or temporary
+     1>fromSPIM\Widget.cpp(157): warning C4305: 'initializing' : truncation from 'double' to 'const float'
+     1>fromSPIM\Widget.cpp(224): warning C4305: 'argument' : truncation from 'double' to 'GLfloat'
+     1>fromSPIM\Widget.cpp(361): warning C4305: 'argument' : truncation from 'double' to 'GLfloat'
+     1>fromSPIM\Widget.cpp(365): warning C4305: 'argument' : truncation from 'double' to 'GLfloat'
+     1>fromSPIM\Widget.cpp(369): warning C4305: 'argument' : truncation from 'double' to 'GLfloat'
+     1>fromSPIM\Widget.cpp(415): warning C4305: 'argument' : truncation from 'double' to 'GLfloat'
+     1>fromSPIM\Widget.cpp(419): warning C4305: 'argument' : truncation from 'double' to 'GLfloat'
+     1>fromSPIM\Widget.cpp(423): warning C4305: 'argument' : truncation from 'double' to 'GLfloat'
+     1>fromSPIM\Widget.cpp(427): warning C4305: 'argument' : truncation from 'double' to 'GLfloat'
+         GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         main.cpp
+     1>s:\apps\dual_test\fionavolume\FionaVolumeReader.h(70): warning C4313: 'printf'  : '%x' in format string conflicts with argument 1 of type 'char *'
+     1>s:\apps\dual_test\fionavolume\FionaVolumeReader.h(71): warning C4313: 'printf'  : '%x' in format string conflicts with argument 1 of type 'char *'
+     1>main.cpp(339): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
+     1>main.cpp(348): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I..\FionaLib /I..\FionaLib\include /Zi /nologo /W3 /WX- /O2 /Oi /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TC /errorReport:prompt fromSPIM\stb_image.c fromSPIM\stb_image_write.c
+         stb_image.c
+         stb_image_write.c
+     1>fromSPIM\stb_image_write.c(86): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+     1>fromSPIM\stb_image_write.c(251): warning C4244: 'initializing' : conversion from '__int64' to 'int', possible loss of data
+     1>fromSPIM\stb_image_write.c(426): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"S:\apps\dual_test\FionaVolume\x64\Release\FionaVolume.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\FionaLib\lib64 /LIBPATH:SDK\lib64 FreeImage.lib xinput9_1_0.lib FionaLib.lib Leap.lib vrpn.lib glew32s.lib glut32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"S:\apps\dual_test\FionaVolume\x64\Release\FionaVolume.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"S:\apps\dual_test\FionaVolume\x64\Release\FionaVolume.lib" /MACHINE:X64 x64\Release\FionaVolume.obj
+         x64\Release\FionaVolumeReader.obj
+         x64\Release\AABB.obj
+         x64\Release\BeadDetection.obj
+         x64\Release\Config.obj
+         x64\Release\Framebuffer.obj
+         x64\Release\GeometryImage.obj
+         x64\Release\InteractionVolume.obj
+         x64\Release\Layout.obj
+         x64\Release\OrbitCamera.obj
+         x64\Release\Ray.obj
+         x64\Release\Shader.obj
+         x64\Release\SimplePointcloud.obj
+         x64\Release\SpimStack.obj
+         x64\Release\StackRegistration.obj
+         x64\Release\StackTransformationSolver.obj
+         x64\Release\stb_image.obj
+         x64\Release\stb_image_write.obj
+         x64\Release\Threshold.obj
+         x64\Release\tinyxml2.obj
+         x64\Release\Widget.obj
+         x64\Release\main.obj
+     1>LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+         Generating code
+         Finished generating code
+     1>FionaVolume.obj : warning LNK4049: locally defined symbol __glewTexBuffer imported
+     1>FionaVolume.obj : warning LNK4049: locally defined symbol __glewUniform3iv imported
+     1>FionaVolume.obj : warning LNK4049: locally defined symbol __glewTexSubImage3D imported
+     1>FionaVolume.obj : warning LNK4049: locally defined symbol __glewTexImage3D imported
+     1>FionaVolume.obj : warning LNK4049: locally defined symbol __glewActiveTexture imported
+     1>FionaVolume.obj : warning LNK4049: locally defined symbol __glewBindBuffer imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewCheckFramebufferStatus imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewRenderbufferStorage imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewGenerateMipmap imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewBindFramebuffer imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewGenFramebuffers imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewGenRenderbuffers imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewDeleteRenderbuffers imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewDrawBuffers imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewDeleteFramebuffers imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewFramebufferRenderbuffer imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewBindRenderbuffer imported
+     1>Framebuffer.obj : warning LNK4049: locally defined symbol __glewFramebufferTexture2D imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewGetUniformLocation imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewAttachShader imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewUniform1i imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewCreateProgram imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewGetProgramInfoLog imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewDeleteProgram imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewGetProgramiv imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewUniform1f imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewUniformMatrix4fv imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewGetAttribLocation imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewUniform2f imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewBindAttribLocation imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewUniform2i imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewUniformMatrix4dv imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewShaderSource imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewUseProgram imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewUniform4f imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewUniform3f imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewCompileShader imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewLinkProgram imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewIsShader imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewGetShaderInfoLog imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewCreateShader imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewDeleteShader imported
+     1>Shader.obj : warning LNK4049: locally defined symbol __glewValidateProgram imported
+     1>SimplePointcloud.obj : warning LNK4049: locally defined symbol __glewGenBuffers imported
+     1>SimplePointcloud.obj : warning LNK4049: locally defined symbol __glewDeleteBuffers imported
+     1>SimplePointcloud.obj : warning LNK4049: locally defined symbol __glewBufferData imported
+     1>main.obj : warning LNK4049: locally defined symbol __glewGetShaderiv imported
+     1>main.obj : warning LNK4049: locally defined symbol glewInit imported
+     1>glew32s.lib(glew.obj) : warning LNK4204: 'S:\apps\dual_test\FionaVolume\x64\Release\vc120.pdb' is missing debugging information for referencing module; linking object as if no debug info
+         FionaVolume.vcxproj -> S:\apps\dual_test\FionaVolume\x64\Release\FionaVolume.exe
+     1>Done Building Project "S:\apps\dual_test\FionaVolume\FionaVolume.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:25.39

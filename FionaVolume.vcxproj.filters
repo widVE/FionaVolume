@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="SPIM">
+      <UniqueIdentifier>{d9395672-3c46-468d-8093-0d8ea7c872ab}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FionaVolume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FionaVolumeReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\AABB.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\BeadDetection.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\Config.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\Framebuffer.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\GeometryImage.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\InteractionVolume.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\Layout.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\OrbitCamera.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\Ray.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\Shader.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\SimplePointcloud.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\SpimStack.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\StackRegistration.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\StackTransformationSolver.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\Threshold.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\tinyxml2.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\Widget.cpp">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\stb_image.c">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+    <ClCompile Include="fromSPIM\stb_image_write.c">
+      <Filter>SPIM</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FionaVolume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FionaVolumeReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\AABB.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\BeadDetection.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\Config.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\Framebuffer.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\GeometryImage.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\glmIO.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\InteractionVolume.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\Layout.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\OrbitCamera.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\Ray.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\Shader.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\SimplePointcloud.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\SpimStack.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\StackRegistration.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\StackTransformationSolver.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\stb_image.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\Threshold.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\TinyStats.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\tinyxml2.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+    <ClInclude Include="fromSPIM\Widget.h">
+      <Filter>SPIM</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

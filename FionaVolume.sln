@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FionaVolume", "FionaVolume.vcxproj", "{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5} = {06FC2C17-DE45-4F53-80D5-C151F07904B5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FionaLib", "..\FionaLib\FionaLib.vcxproj", "{06FC2C17-DE45-4F53-80D5-C151F07904B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		DebugOculus|Win32 = DebugOculus|Win32
+		DebugOculus|x64 = DebugOculus|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		ReleaseOculus|Win32 = ReleaseOculus|Win32
+		ReleaseOculus|x64 = ReleaseOculus|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.Debug|Win32.Build.0 = Debug|Win32
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.Debug|x64.ActiveCfg = Debug|x64
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.Debug|x64.Build.0 = Debug|x64
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.DebugOculus|Win32.ActiveCfg = DebugOculus|Win32
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.DebugOculus|Win32.Build.0 = DebugOculus|Win32
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.DebugOculus|x64.ActiveCfg = DebugOculus|x64
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.DebugOculus|x64.Build.0 = DebugOculus|x64
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.Release|Win32.ActiveCfg = Release|Win32
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.Release|Win32.Build.0 = Release|Win32
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.Release|x64.ActiveCfg = Release|x64
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.Release|x64.Build.0 = Release|x64
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.ReleaseOculus|Win32.ActiveCfg = ReleaseOculus|Win32
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.ReleaseOculus|Win32.Build.0 = ReleaseOculus|Win32
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.ReleaseOculus|x64.ActiveCfg = ReleaseOculus|x64
+		{8DDFE351-D1A9-47E6-BEF2-18EC6BBBE77E}.ReleaseOculus|x64.Build.0 = ReleaseOculus|x64
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.Debug|Win32.Build.0 = Debug|Win32
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.Debug|x64.ActiveCfg = Debug|x64
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.Debug|x64.Build.0 = Debug|x64
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.DebugOculus|Win32.ActiveCfg = DebugOculus|Win32
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.DebugOculus|Win32.Build.0 = DebugOculus|Win32
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.DebugOculus|x64.ActiveCfg = DebugOculus|x64
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.DebugOculus|x64.Build.0 = DebugOculus|x64
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.Release|Win32.ActiveCfg = Release|Win32
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.Release|Win32.Build.0 = Release|Win32
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.Release|x64.ActiveCfg = Release|x64
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.Release|x64.Build.0 = Release|x64
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.ReleaseOculus|Win32.ActiveCfg = ReleaseOculus|Win32
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.ReleaseOculus|Win32.Build.0 = ReleaseOculus|Win32
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.ReleaseOculus|x64.ActiveCfg = ReleaseOculus|x64
+		{06FC2C17-DE45-4F53-80D5-C151F07904B5}.ReleaseOculus|x64.Build.0 = ReleaseOculus|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EA9406A4-E88A-4113-B87C-C042C496729F}
+	EndGlobalSection
+EndGlobal
