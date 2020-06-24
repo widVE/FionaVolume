@@ -25,6 +25,8 @@
 
 #include "FionaVolume.h"
 
+#include "AntTweakBar.h"
+
 class FionaScene;
 FionaScene* scene = NULL;
 
@@ -224,6 +226,7 @@ void wandBtns(int button, int state, int idx)
 
 void keyboard(unsigned int key, int x, int y)
 {
+	TwEventKeyboardGLUT(key, x, y);
 	if(scene)
 	{
 		scene->keyboard(key, x, y);
@@ -257,12 +260,25 @@ void joystick(int w, const jvec3& v)
 
 void mouseBtns(int button, int state, int x, int y)
 {
-
+	TwEventMouseButtonGLUT(button, state, x, y);
+	if (scene) {
+		scene->mouseCallback(button, state, x, y);
+	}
 }
 
 void mouseMove(int x, int y) 
 {
+	TwEventMouseMotionGLUT(x, y);
+	if (scene) {
+		scene->mouseMoveCallback(x, y);
+	}
+}
 
+void passiveMouseMove(int x, int y) {
+	TwEventMouseMotionGLUT(x, y);
+	if (scene) {
+		scene->passiveMouseMoveCallback(x, y);
+	}
 }
 
 void tracker(int s,const jvec3& p, const quat& q)
@@ -317,6 +333,13 @@ void cleanup(int errorCode)
 
 }
 
+void reshape(int width, int height) {
+	TwWindowSize(width, height);
+	if (scene) {
+		((FionaVolume*)scene)->reshape(width, height);
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	std::string fileName;
@@ -352,9 +375,15 @@ int main(int argc, char *argv[])
 
 	if (!dirsLoaded) throw std::runtime_error("only directory mode supported");
 
-	glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE|GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
 	
 	glutCreateWindow	("Window");
+
+	if (_FionaUTIsCAVEMachine() || fionaConf.appType == FionaConfig::DEVLAB_WIN8)
+	{
+		::ShowCursor(FALSE);
+		::FreeConsole();
+	}
 
 	glewInit();
 
@@ -375,12 +404,20 @@ int main(int argc, char *argv[])
 	glutJoystickFunc	(joystick);
 	glutMouseFunc		(mouseBtns);
 	glutMotionFunc		(mouseMove);
+	glutPassiveMotionFunc(passiveMouseMove);
 	glutWandButtonFunc	(wandBtns);
 	glutTrackerFunc		(tracker);
 	glutKeyboardFunc	(keyboard);
 	glutCleanupFunc		(cleanup);
 	glutFrameFunc		(preDisplay);
 	glutPostRender		(postDisplay);
+	glutReshapeFunc		(reshape);
+
+	//freeglut required for these I believe
+	//glutSpecialFunc((GLUTspecialfun)TwEventSpecialGLUT);
+	//TwGLUTModifiersFunc(glutGetModifiers);
+
+	TwWindowSize(glutGet(GLUT_SCREEN_WIDTH), glutGet(GLUT_SCREEN_HEIGHT));
 
 	glutMainLoop();
 

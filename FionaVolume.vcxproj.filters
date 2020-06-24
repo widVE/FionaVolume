@@ -152,5 +152,8 @@
     <ClInclude Include="fromSPIM\Widget.h">
       <Filter>SPIM</Filter>
     </ClInclude>
+    <ClInclude Include="CoordFBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

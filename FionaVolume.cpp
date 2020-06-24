@@ -7,7 +7,66 @@
 
 #include "FionaUT.h"
 
+#include "AntTweakBar.h"
+
 std::string FionaVolume::shaderPath = std::string("../../shaders/");
+
+void uicb(void* data) {
+	FionaVolume::renderMode& mode = *(FionaVolume::renderMode*)data;
+	mode = (FionaVolume::renderMode)((((uint32_t)mode) + 1) % (uint32_t)FionaVolume::renderMode::renderModeCount);
+}
+
+void writecb(void* data) {
+	FILE* f = fopen("./viewstate", "wb");
+	if (f) {
+		VolumeData dat;
+		memcpy(&dat, data, sizeof(VolumeData));
+		dat.currentFrame = 0;
+		dat.playing = false;
+		fwrite(&dat, 1, sizeof(VolumeData), f);
+		fclose(f);
+	}
+}
+void readcb(void* data) {
+	FILE* f = fopen("./viewstate", "rb");
+	if (f) {
+		fread(data, 1, sizeof(VolumeData), f);
+		fclose(f);
+	}
+}
+void resetcb(void* dat) {
+	VolumeData& data = *(VolumeData*)dat;
+	data.sampleRate = 1.0;
+	data.drawMode = 0;
+
+	data.position[0] = 0.0f;
+	data.position[1] = 0.0f;
+	data.position[2] = 0.0f;
+
+	data.eulerAngles[0] = 0.0f;
+	data.eulerAngles[1] = 0.0f;
+	data.eulerAngles[2] = 0.0f;
+
+	data.scale[0] = 1.0496f;
+	data.scale[1] = 0.5248f;
+	data.scale[2] = 0.445;
+
+	for (int i = 0; i < VOLUME_CHANNELS; i++) {
+		data.color[i][0] = 0.0f;
+		data.color[i][1] = 0.0f;
+		data.color[i][2] = 0.0f;
+		data.color[i][3] = 1.0f;
+		data.visible[i] = true;
+		data.scaleFactor[i] = 0.1;
+	}
+	data.color[0][1] = 1.0f;
+	data.color[0][2] = 1.0f;
+	if (VOLUME_CHANNELS > 1) data.color[1][0] = 1.0f;
+	data.scaleFactor[0] = 20;
+
+	data.playing = 0;
+	data.currentFrame = 0;
+}
 
 FionaVolume::FionaVolume() : FionaScene(),
 pointShader_(0),
@@ -19,22 +78,97 @@ drawQuad_(0),
 volumeDifferenceShader_(0),
 drawPosition_(0),
 gpuMultiStackSampler_(0),
-volumeRenderTarget_(0),
-rayStartTarget_(0)
+volumeRenderTarget_(0)
 
 {
+	data.sampleRate = 1.0;
+	data.drawMode = 0;
+
+	data.position[0] = 0.0f;
+	data.position[1] = 0.0f;
+	data.position[2] = 0.0f;
+
+	data.eulerAngles[0] = 0.0f;
+	data.eulerAngles[1] = 0.0f;
+	data.eulerAngles[2] = 0.0f;
+
+	data.scale[0] = 1.0496f;
+	data.scale[1] = 0.5248f;
+	data.scale[2] = 0.445;
+	//data.scale[0] = 0.001f;
+	//data.scale[1] = 0.001f;
+	//data.scale[2] = 0.004878f;
+
 	for (int i = 0; i < VOLUME_CHANNELS; i++) {
 		currentStacks_[i] = 0;
 		frameCurrents_[i] = 0;
 		swap_txs_[i] = 0;
-		visible[i] = true;
-		readers_[i].setPaused(false);
+		readers_[i].setPaused(true);
+		data.color[i][0] = 0.0f;
+		data.color[i][1] = 0.0f;
+		data.color[i][2] = 0.0f;
+		data.color[i][3] = 1.0f;
+		data.visible[i] = true;
+		data.scaleFactor[i] = 0.1;
 	}
+	data.color[0][1] = 1.0f;
+	data.color[0][2] = 1.0f;
+	if(VOLUME_CHANNELS > 1) data.color[1][0] = 1.0f;
+	data.scaleFactor[0] = 500;
+	if(VOLUME_CHANNELS > 1) data.scaleFactor[1] = 500;
+	data.drawMode = (uint32_t)renderMode::renderMax;
+
+	data.playing = 0;
+	data.currentFrame = 0;
+
 	reloadShaders();
 
-
 	volumeRenderTarget_ = new Framebuffer(1024, 1024, GL_RGBA32F, GL_FLOAT, 1, GL_LINEAR);
-	rayStartTarget_ = new Framebuffer(512, 512, GL_RGBA32F, GL_FLOAT);
+	frontCoord = new CoordFBO(fionaConf.FBOWidth, fionaConf.FBOHeight);
+	backCoord = new CoordFBO(fionaConf.FBOWidth, fionaConf.FBOHeight);
+
+	TwInit(TW_OPENGL, NULL);
+
+	if (!fionaConf.slave) {
+		bar = TwNewBar("UIBar");
+		TwDefine(" GLOBAL help='' ");
+		TwDefine(" UIBar size='200 400' color='96 216 224' ");
+
+		TwAddVarRW(bar, "X Position", TW_TYPE_FLOAT, &data.position[0], "group=Manipulation step=.01");
+		TwAddVarRW(bar, "Y Position", TW_TYPE_FLOAT, &data.position[1], "group=Manipulation step=.01");
+		TwAddVarRW(bar, "Z Position", TW_TYPE_FLOAT, &data.position[2], "group=Manipulation step=.01");
+		//TwAddVarRW(bar, "Orientation", TW_TYPE_QUAT4F, &volumeOri.x, "group=Manipulation");
+		TwAddVarRW(bar, "X Scale", TW_TYPE_FLOAT, &data.scale[0], "group=Manipulation min=0.1 max=5 step=.01");
+		TwAddVarRW(bar, "Y Scale", TW_TYPE_FLOAT, &data.scale[1], "group=Manipulation min=0.1 max=5 step=.01");
+		TwAddVarRW(bar, "Z Scale", TW_TYPE_FLOAT, &data.scale[2], "group=Manipulation min=0.1 max=5 step=.01");
+		TwAddVarRW(bar, "Angle X", TW_TYPE_FLOAT, &data.eulerAngles[0], "group=Manipulation min=0 max=360 step=1");
+		TwAddVarRW(bar, "Angle Y", TW_TYPE_FLOAT, &data.eulerAngles[1], "group=Manipulation min=0 max=360 step=1");
+		TwAddVarRW(bar, "Angle Z", TW_TYPE_FLOAT, &data.eulerAngles[2], "group=Manipulation min=0 max=360 step=1");
+		TwAddVarRW(bar, "X-Slice-Lower", TW_TYPE_UINT32, &data.lowerLims[0], "group=Manipulation step=1");
+		TwAddVarRW(bar, "Y-Slice-Lower", TW_TYPE_UINT32, &data.lowerLims[1], "group=Manipulation step=1");
+		TwAddVarRW(bar, "Z-Slice-Lower", TW_TYPE_UINT32, &data.lowerLims[2], "group=Manipulation step=1");
+		TwAddVarRW(bar, "X-Slice-Upper", TW_TYPE_UINT32, &data.upperLims[0], "group=Manipulation step=1");
+		TwAddVarRW(bar, "Y-Slice-Upper", TW_TYPE_UINT32, &data.upperLims[1], "group=Manipulation step=1");
+		TwAddVarRW(bar, "Z-Slice-Upper", TW_TYPE_UINT32, &data.upperLims[2], "group=Manipulation step=1");
+
+		TwAddVarRW(bar, "Sample Rate", TW_TYPE_DOUBLE, &data.sampleRate, "group=View min=0.5 max=4 step=0.5");
+		for (int i = 0; i < VOLUME_CHANNELS; i++) TwAddVarRW(bar, ("Channel " + std::to_string(i) + " Visible").c_str(), TW_TYPE_BOOL32, &data.visible[i], "group=View");
+		for (int i = 0; i < VOLUME_CHANNELS; i++) TwAddVarRW(bar, ("Channel " + std::to_string(i) + " Color").c_str(), TW_TYPE_COLOR4F, &data.color[i], "group=View");
+		for (int i = 0; i < VOLUME_CHANNELS; i++) TwAddVarRW(bar, ("Channel " + std::to_string(i) + " Intensity").c_str(), TW_TYPE_DOUBLE, &data.scaleFactor[i], "group=View step=0.5");
+		TwAddButton(bar, "Cycle Mode", uicb, &data.drawMode, "group=View");
+		TwAddVarRO(bar, "Mode: ", TW_TYPE_STDSTRING, &drawModeStr, "group=View");
+
+		TwAddVarRW(bar, "Playing", TW_TYPE_BOOL32, &data.playing, "group=Playback");
+		TwAddVarRO(bar, "Frame Index", TW_TYPE_UINT32, &readers_[0].fileIndex_, "group=Playback");
+
+		TwAddButton(bar, "Save State", writecb, &data, "group=Interface");
+		TwAddButton(bar, "Load State", readcb, &data, "group=Interface");
+		TwAddButton(bar, "Reset State", resetcb, &data, "group=Interface");
+	}
+
+	for (int i = 0; i < VOLUME_CHANNELS; i++) {
+		readers_[i].setPaused(false);
+	}
 }
 
 FionaVolume::~FionaVolume()
@@ -104,16 +238,17 @@ FionaVolume::~FionaVolume()
 		gpuMultiStackSampler_ = 0;
 	}
 
-	if (rayStartTarget_ != 0)
-	{
-		delete rayStartTarget_;
-		rayStartTarget_ = 0;
-	}
-
 	if (volumeRenderTarget_ != 0)
 	{
 		delete volumeRenderTarget_;
 		volumeRenderTarget_ = 0;
+	}
+
+	if (frontCoord) {
+		delete frontCoord;
+	}
+	if (backCoord) {
+		delete backCoord;
 	}
 }
 
@@ -122,43 +257,88 @@ void FionaVolume::initialize()
 	//reader_.start();
 }
 
-void FionaVolume::drawProxyGeometry(void) {
-	//vp->camera->setup();
-	//only draw first channel, all should be the same size
-	if (currentStacks_[0]) {
-		glm::mat4 mvp;
-		//vp->camera->getMVP(mvp);
-		float mv[16];
-		float proj[16];
-		glGetFloatv(GL_PROJECTION_MATRIX, proj);
-		glGetFloatv(GL_MODELVIEW_MATRIX, mv);
-		glm::mat4 glmMV = glm::make_mat4(mv);
-		glm::mat4 glmProj = glm::make_mat4(proj);
-		mvp = glmProj * glmMV;
+void FionaVolume::drawProxyGeometry(glm::mat4 mvp, glm::mat4 volumeModelMat, glm::ivec3 dimensions) {
+	coordinateSpace_->bind();
+	coordinateSpace_->setMatrix4("modelMVP", mvp * volumeModelMat);
+	glUniform3iv(coordinateSpace_->getUniform("dimensions"), 1, &dimensions.x);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
-		drawPosition_->bind();
-		drawPosition_->setMatrix4("mvp", mvp);
+	CoordFBO* fbos[2] = { frontCoord, backCoord };
+	for (int i = 0; i < 2; i++) {
+		if (i == 0)
+			glCullFace(GL_BACK);
+		else
+			glCullFace(GL_FRONT);
 
-		glEnableClientState(GL_VERTEX_ARRAY);
+		//fbos[i]->clear();
+		fbos[i]->bind();
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-		glEnable(GL_CULL_FACE);
-		glFrontFace(GL_CCW);
+		//-z face
+		glBegin(GL_TRIANGLES);
+		glVertex3f(0, 0, 0); glTexCoord3f(0, 0, 0);
+		glVertex3f(1, 0, 0); glTexCoord3f(1, 0, 0);
+		glVertex3f(1, 1, 0); glTexCoord3f(1, 1, 0);
+		glVertex3f(0, 0, 0); glTexCoord3f(0, 0, 0);
+		glVertex3f(1, 1, 0); glTexCoord3f(1, 1, 0);
+		glVertex3f(0, 1, 0); glTexCoord3f(0, 1, 0);
+		glEnd();
 
-		// draw back faces
-		rayStartTarget_->bind();
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glCullFace(GL_FRONT);
+		//+z face
+		glBegin(GL_TRIANGLES);
+		glVertex3f(1, 0, 1); glTexCoord3f(1, 0, 1);
+		glVertex3f(0, 0, 1); glTexCoord3f(0, 0, 1);
+		glVertex3f(1, 1, 1); glTexCoord3f(1, 1, 1);
+		glVertex3f(0, 0, 1); glTexCoord3f(0, 0, 1);
+		glVertex3f(0, 1, 1); glTexCoord3f(0, 1, 1);
+		glVertex3f(1, 1, 1); glTexCoord3f(1, 1, 1);
+		glEnd();
 
-		currentStacks_[0]->getBBox().drawSolid();
+		//-x face
+		glBegin(GL_TRIANGLES);
+		glVertex3f(0, 0, 0); glTexCoord3f(0, 0, 0);
+		glVertex3f(0, 1, 0); glTexCoord3f(0, 1, 0);
+		glVertex3f(0, 1, 1); glTexCoord3f(0, 1, 1);
+		glVertex3f(0, 0, 0); glTexCoord3f(0, 0, 0);
+		glVertex3f(0, 0, 1); glTexCoord3f(0, 0, 1);
+		glVertex3f(0, 1, 1); glTexCoord3f(0, 1, 1);
+		glEnd();
 
-		rayStartTarget_->disable();
+		//+x face
+		glBegin(GL_TRIANGLES);
+		glVertex3f(1, 0, 0); glTexCoord3f(1, 0, 0);
+		glVertex3f(1, 1, 0); glTexCoord3f(1, 1, 0);
+		glVertex3f(1, 1, 1); glTexCoord3f(1, 1, 1);
+		glVertex3f(1, 0, 0); glTexCoord3f(1, 0, 0);
+		glVertex3f(1, 0, 1); glTexCoord3f(1, 0, 1);
+		glVertex3f(1, 1, 1); glTexCoord3f(1, 1, 1);
+		glEnd();
 
-		glCullFace(GL_BACK);
-		glDisableClientState(GL_VERTEX_ARRAY);
+		//-y face
+		glBegin(GL_TRIANGLES);
+		glVertex3f(0, 0, 0); glTexCoord3f(0, 0, 0);
+		glVertex3f(1, 0, 0); glTexCoord3f(1, 0, 0);
+		glVertex3f(1, 0, 1); glTexCoord3f(1, 0, 1);
+		glVertex3f(0, 0, 0); glTexCoord3f(0, 0, 0);
+		glVertex3f(0, 0, 1); glTexCoord3f(0, 0, 1);
+		glVertex3f(1, 0, 1); glTexCoord3f(1, 0, 1);
+		glEnd();
 
-		glDisable(GL_CULL_FACE);
-		drawPosition_->disable();
+		//+y face
+		glBegin(GL_TRIANGLES);
+		glVertex3f(0, 1, 0); glTexCoord3f(0, 1, 0);
+		glVertex3f(1, 1, 0); glTexCoord3f(1, 1, 0);
+		glVertex3f(1, 1, 1); glTexCoord3f(1, 1, 1);
+		glVertex3f(0, 1, 0); glTexCoord3f(0, 1, 0);
+		glVertex3f(0, 1, 1); glTexCoord3f(0, 1, 1);
+		glVertex3f(1, 1, 1); glTexCoord3f(1, 1, 1);
+		glEnd();
 	}
+
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 }
 
 void FionaVolume::loadVolume(int index, const std::string & fileName) {
@@ -168,7 +348,7 @@ void FionaVolume::loadVolume(int index, const std::string & fileName) {
 		}
 
 		for (const auto& fn : readers_[i].getAllFileNames()) {
-			std::cout << "file = " << fn << "\n";
+			//std::cout << "file = " << fn << "\n";
 		}
 		currentStacks_[i] = SpimStack::load(fileName);
 		currentStacks_[i]->setVoxelDimensions(glm::vec3(1, 1, 1));
@@ -179,6 +359,19 @@ void FionaVolume::loadVolume(int index, const std::string & fileName) {
 		unsigned long long tSize = res.x*res.y*res.z*currentStacks_[i]->getBytesPerVoxel();
 		readers_[i].preallocateMemory(2, tSize);
 		//reader_.setPaused(false);
+
+		data.lowerLims[0] = 0;
+		data.lowerLims[1] = 0;
+		data.lowerLims[2] = 0;
+		data.upperLims[0] = res.x;
+		data.upperLims[1] = res.y;
+		data.upperLims[2] = res.z;
+		TwDefine(("UIBar/X-Slice-Lower min=0 max=" + std::to_string(res.x)).c_str());
+		TwDefine(("UIBar/Y-Slice-Lower min=0 max=" + std::to_string(res.y)).c_str());
+		TwDefine(("UIBar/Z-Slice-Lower min=0 max=" + std::to_string(res.z)).c_str());
+		TwDefine(("UIBar/X-Slice-Upper min=0 max=" + std::to_string(res.x)).c_str());
+		TwDefine(("UIBar/Y-Slice-Upper min=0 max=" + std::to_string(res.y)).c_str());
+		TwDefine(("UIBar/Z-Slice-Upper min=0 max=" + std::to_string(res.z)).c_str());
 	}
 }
 
@@ -205,8 +398,44 @@ void FionaVolume::drawTexturedQuad(GLuint texture)
 
 }
 
+void FionaVolume::drawBoundsImmediate(glm::mat4 mvp, glm::mat4 volumeModelMat) {
+	volumeSpace_->bind();
+	volumeSpace_->setMatrix4("modelMVP", mvp * volumeModelMat);
+	glDisable(GL_DEPTH_TEST);
+	glBegin(GL_LINES);
+	//-z face
+	glVertex3f(0, 0, 0); glVertex3f(1, 0, 0);
+	glVertex3f(1, 0, 0); glVertex3f(1, 1, 0);
+	glVertex3f(1, 1, 0); glVertex3f(0, 1, 0);
+	glVertex3f(0, 1, 0); glVertex3f(0, 0, 0);
+
+	//+z face
+	glVertex3f(0, 0, 1); glVertex3f(1, 0, 1);
+	glVertex3f(1, 0, 1); glVertex3f(1, 1, 1);
+	glVertex3f(1, 1, 1); glVertex3f(0, 1, 1);
+	glVertex3f(0, 1, 1); glVertex3f(0, 0, 1);
+
+	//edges between z faces
+	glVertex3f(0, 0, 0); glVertex3f(0, 0, 1);
+	glVertex3f(1, 0, 0); glVertex3f(1, 0, 1);
+	glVertex3f(1, 1, 0); glVertex3f(1, 1, 1);
+	glVertex3f(0, 1, 0); glVertex3f(0, 1, 1);
+	glEnd();
+	glPopMatrix();
+	glEnable(GL_DEPTH_TEST);
+}
+
 void FionaVolume::render(void) {
 	FionaScene::render();
+
+	//fionaConf.tvFileIndex;
+	//_FionaUTSyncSendFileIndex(0, 0);
+
+	if (fionaConf.master) {
+		_FionaUTSyncVolume(data);
+	}
+
+	drawModeStr = getRenderModeString((renderMode)data.drawMode);
 
 	if (fionaRenderCycleLeft) {
 		glClearColor(0.f, 0.f, 0.f, 0.f);
@@ -214,26 +443,28 @@ void FionaVolume::render(void) {
 	}
 
 	if (currentStacks_[0]) {
-		drawProxyGeometry();
-
-		glm::mat4 mvp(1.f);
 		float mv[16];
 		float proj[16];
 		glGetFloatv(GL_PROJECTION_MATRIX, proj);
 		glGetFloatv(GL_MODELVIEW_MATRIX, mv);
+		glm::ivec3 dimensions = currentStacks_[0]->getResolution();
 		glm::mat4 glmMV = glm::make_mat4(mv);
 		glm::mat4 glmProj = glm::make_mat4(proj);
-		mvp = glmProj * glmMV;
-
-		/*printf("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n", mv[0], mv[1], mv[2], mv[3], mv[4], mv[5], mv[6], mv[7], mv[8],
-			mv[9], mv[10], mv[11], mv[12], mv[13], mv[14], mv[15]);*/
-
+		glm::mat4 mvp = glmProj * glmMV;
 		glm::mat4 imvp = glm::inverse(mvp);
+		glm::mat4 ip = glm::inverse(glmProj);
+		glm::mat4 volumeRotMat = glm::rotate(data.eulerAngles[2], glm::vec3(0.0f, 0.0f, 1.0f)) * glm::rotate(data.eulerAngles[1], glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(data.eulerAngles[0], glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 volumeModelMat = glm::translate(glm::vec3(data.position[0], data.position[1], data.position[2])) * volumeRotMat * glm::scale(glm::vec3(data.scale[0], data.scale[1], data.scale[2])) * glm::translate(glm::vec3(-0.5f, -0.5f, -0.5f));
 
-		volumeRenderTarget_->bind();
+		//drawProxyGeometry(mvp, volumeModelMat, dimensions);
+
+		//volumeRenderTarget_->bind();
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		volumeRaycaster_->bind();
+		volumeRaycaster_->setTexture2D("frontCoords", frontCoord->getTex(), 10);
+		volumeRaycaster_->setTexture2D("backCoords", backCoord->getTex(), 11);
 
 		glActiveTexture(GL_TEXTURE0);
 
@@ -252,20 +483,40 @@ void FionaVolume::render(void) {
 				sprintf(uniName, "volumeTex[%d]", i);
 				volumeRaycaster_->setUniform(uniName, i);
 				sprintf(uniName, "visible[%d]", i);
-				volumeRaycaster_->setUniform(uniName, visible[i] ? 1 : 0);
+				volumeRaycaster_->setUniform(uniName, data.visible[i] ? 1 : 0);
+				sprintf(uniName, "channelColors[%d]", i);
+				glUniform4f(volumeRaycaster_->getUniform(uniName), data.color[i][0], data.color[i][1], data.color[i][2], data.color[i][3]);
+				sprintf(uniName, "scaleFactor[%d]", i);
+				glUniform1d(volumeRaycaster_->getUniform(uniName), data.scaleFactor[i]);
 			}
 		}
 		glActiveTexture(GL_TEXTURE0);
 
-		glm::ivec3 dimensions = currentStacks_[0]->getResolution();
-		glm::vec3 cellSize = glm::vec3(0.41f, 0.41f, 2.0f);
-		glUniform3iv(volumeRaycaster_->getUniform("dimensions"), 1, &dimensions.r);
-		volumeRaycaster_->setUniform("invCellSize", 1.0f / cellSize);
+
+		//glm::vec3 cellSize = glm::vec3(0.41f, 0.41f, 2.0f);
+		glUniform3iv(volumeRaycaster_->getUniform("dimensions"), 1, &dimensions.x);
+		//volumeRaycaster_->setUniform("invCellSize", 1.0f / cellSize);
+		//volumeRaycaster_->setUniform("cellSize", cellSize);
+		volumeRaycaster_->setMatrix4("MVP", mvp);
 		volumeRaycaster_->setMatrix4("inverseMVP", imvp);
+		volumeRaycaster_->setMatrix4("inverseP", ip);
+		volumeRaycaster_->setMatrix4("inverseMV", glm::inverse(glmMV));
+		volumeRaycaster_->setMatrix4("invVolumeModelMat", glm::inverse(volumeModelMat));
+		glUniform1d(volumeRaycaster_->getUniform("sampleRate"), data.sampleRate);
+		jvec3 vCavePos = camPos + camOri.rot(fionaConf.headPos);
+		volumeRaycaster_->setUniform("camPos", vCavePos.x, vCavePos.y, vCavePos.z);
+		volumeRaycaster_->setUniform("renderMode", (int)data.drawMode);
+		glUniform1ui(volumeRaycaster_->getUniform("lowerLims[0]"), data.lowerLims[0]);
+		glUniform1ui(volumeRaycaster_->getUniform("lowerLims[1]"), data.lowerLims[1]);
+		glUniform1ui(volumeRaycaster_->getUniform("lowerLims[2]"), data.lowerLims[2]);
+		glUniform1ui(volumeRaycaster_->getUniform("upperLims[0]"), data.upperLims[0]);
+		glUniform1ui(volumeRaycaster_->getUniform("upperLims[1]"), data.upperLims[1]);
+		glUniform1ui(volumeRaycaster_->getUniform("upperLims[2]"), data.upperLims[2]);
+		//glUniform1ui(volumeRaycaster_->getUniform("lowerLims[0]"), 500);
 
 		glDisable(GL_DEPTH_TEST);
 		glDepthMask(GL_FALSE);
-
+		
 		// draw a screen-filling quad, tex coords will be calculated in shader
 		glBegin(GL_QUADS);
 		glVertex2i(0, 0);
@@ -283,10 +534,10 @@ void FionaVolume::render(void) {
 		}*/
 
 		volumeRaycaster_->disable();
-		volumeRenderTarget_->disable();
+		//volumeRenderTarget_->disable();
 
 		//drawTexturedQuad(rayStartTarget_->getColorbuffer());
-		drawTexturedQuad(volumeRenderTarget_->getColorbuffer());
+		//drawTexturedQuad(volumeRenderTarget_->getColorbuffer());
 		
 		// Ensure that swap textures are created
 		for (int i = 0; i < VOLUME_CHANNELS; i++) {
@@ -305,25 +556,33 @@ void FionaVolume::render(void) {
 			}
 		}
 
+		// if frameIncrement would be 0 just try to upload the whole frame instead
 		uint32_t realTargetIncrement = (frameIncrement_ == 0 ? dimensions.z : frameIncrement_);
-		//realTargetIncrement = 4;
+
+		// for benchmarking and dynamic upload limiting
 		int totalSlicesThisFrame = 0;
+
+		// keep track of how many channels are ready to swap, if all are ready then perform the swap
 		int numReadyToSwap = 0;
 		float start = FionaUTTime();
 		for (int i = 0; i < VOLUME_CHANNELS; i++) {
+			// if the current frame is not being uploaded and a new one is ready, start uploading
 			bool startUploading = (readers_[i].newImageLoaded() && frameCurrents_[i] == 0);
 			if (startUploading) {
-				readers_[i].swapOffset();
+				// unpause, swap buffers to load
+				readers_[i].swapOffset(data.currentFrame % readers_[i].fileList_.size());
 				readers_[i].setNewImageLoaded(false);
 				readers_[i].setPaused(false);
 			}
 
+			// if we are starting uploading or currently uploading, load slices
 			if (startUploading || frameCurrents_[i] != 0) {
-				uint32_t nextFrameCurrent = glm::min(frameCurrents_[i] + (realTargetIncrement == 0 ? dimensions.z : realTargetIncrement), (uint32_t)dimensions.z);
+
+				// next z level to upload to, 
+				uint32_t nextFrameCurrent = glm::min(frameCurrents_[i] + realTargetIncrement, (uint32_t)dimensions.z);
 				if (nextFrameCurrent == (uint32_t)dimensions.z) {
 					totalSlicesThisFrame += (uint32_t)dimensions.z - frameCurrents_[i];
-				}
-				else {
+				} else {
 					totalSlicesThisFrame += realTargetIncrement;
 				}
 
@@ -336,10 +595,6 @@ void FionaVolume::render(void) {
 						readers_[i].getValidPtr() + (dimensions.x * dimensions.y * sizeof(unsigned short) * frameCurrents_[i])
 					);
 					frameCurrents_[i] = nextFrameCurrent;
-					if (frameCurrents_[i] == dimensions.z) {
-						//printf("Updated channel %d, texture %u has data from address %lx\n", i, swap_txs_[i], readers_[i].getValidPtr());
-						//printf("Frame current");
-					}
 				}
 
 				if (frameCurrents_[i] == dimensions.z) {
@@ -351,31 +606,51 @@ void FionaVolume::render(void) {
 		//if(totalSlicesThisFrame != 0) std::cout << "slices per second = " << (double)totalSlicesThisFrame / (end - start) << "\n";
 		//frameIncrement_ = int((double)realTargetIncrement / (end - start)) / 60;
 
-		if (numReadyToSwap == VOLUME_CHANNELS) {
+		if (numReadyToSwap == VOLUME_CHANNELS && data.playing) {
 			for (int i = 0; i < VOLUME_CHANNELS; i++) {
 				frameCurrents_[i] = 0;
 				unsigned int oldTx = currentStacks_[i]->getTexture();
 				currentStacks_[i]->setTextureObject(swap_txs_[i]);
 				swap_txs_[i] = oldTx;
-				//printf("Channel %d now has texture %u\n", i, currentStacks_[i]->getTexture());
 			}
-			std::cout << "swapped textures yo\n";
+			if (!fionaConf.slave) {
+				data.currentFrame++;
+			}
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//drawBoundsImmediate(mvp, volumeModelMat);
+
+		if (!fionaConf.slave) {
+			TwRefreshBar(bar);
+			TwDraw();
 		}
 	}
 
-	if (FionaRenderCycleRight) {
+	/*if (FionaRenderCycleRight) {
 		glFinish();
-	}
+	}*/
 }
 
-void FionaVolume::preRender(float value)
+//void FionaVolume::preRender(float value) {
+//	printf("preRender(...)\n");
+//}
+
+void FionaVolume::postRender(void)
 {
-	FionaScene::preRender(value);
+	FionaScene::postRender();
+
+	//if (fionaConf.appType == FionaConfig::HEADNODE) {
+	//	fionaConf.tvFileIndex = (readers_[0].fileIndex_ + 1) % readers_[0].fileList_.size();
+	//	_FionaUTSyncSendFileIndex(fionaConf.tvFileIndex, 0);
+	//}
 }
 
 void FionaVolume::buttons(int button, int state)
 {
 	FionaScene::buttons(button, state);
+
+	printf("buttons\n");
 
 	if (button == 1 && state == 1)
 	{
@@ -392,7 +667,7 @@ void FionaVolume::keyboard(unsigned int key, int x, int y)
 {
 	FionaScene::keyboard(key, x, y);
 
-	if (key == 'l' || key == 'L') {
+	/*if (key == 'l' || key == 'L') {
 		bool anyRunning = false;
 		for (int i = 0; i < VOLUME_CHANNELS; i++) {
 			if (!readers_[i].getPaused()) {
@@ -405,12 +680,29 @@ void FionaVolume::keyboard(unsigned int key, int x, int y)
 				readers_[i].setPaused(false);
 			}
 		}
-	}
-	for (char c = '1'; c < ('1' + VOLUME_CHANNELS); c++) {
-		if (key == c) {
-			visible[c - '1'] = !visible[c - '1'];
-		}
-	}
+	}*/
+}
+
+void FionaVolume::mouseCallback(int button, int state, int x, int y) {
+	
+}
+
+void FionaVolume::mouseMoveCallback(int x, int y) {
+	
+}
+
+void FionaVolume::passiveMouseMoveCallback(int x, int y) {
+	//printf("Mouse move\n");
+}
+
+void FionaVolume::updateVolumeState(VolumeData const & data)
+{
+	this->data = data;
+}
+
+void FionaVolume::reshape(int width, int height) {
+	frontCoord->resize(width, height);
+	backCoord->resize(width, height);
 }
 
 void FionaVolume::reloadVolumeShader()
@@ -447,6 +739,8 @@ void FionaVolume::reloadVolumeShader()
 		delete volumeRaycaster_;
 	}
 	volumeRaycaster_ = new Shader(shaderPath + "volumeRaycast.vert", shaderPath + "volumeRaycast.frag", defines);
+	volumeSpace_ = new Shader(shaderPath + "volumeSpace.vert", shaderPath + "volumeSpace.frag", defines);
+	coordinateSpace_ = new Shader(shaderPath + "coordinateSpace.vert", shaderPath + "coordinateSpace.frag", defines);
 
 	/*if (volumeDifferenceShader_ != 0)
 	{
@@ -491,4 +785,3 @@ void FionaVolume::reloadShaders()
 
 	//glEnable(GL_DEPTH_TEST);
 }
-

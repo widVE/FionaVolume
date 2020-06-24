@@ -61,14 +61,15 @@ public:
 			return &mem_[0];
 		}
 	}
-	inline void swapOffset() {
+	inline void swapOffset(int nextFileIndex) {
 		if (loadOffset_ == 0) {
 			loadOffset_ = singleFileSize_;
 		} else {
 			loadOffset_ = 0;
 		}
-		printf("Now loading into %lx\n", &mem_[loadOffset_]);
-		printf("Now valid in     %lx\n", getValidPtr());
+		fileIndex_ = nextFileIndex;
+		//printf("Now loading into %lx\n", &mem_[loadOffset_]);
+		//printf("Now valid in     %lx\n", getValidPtr());
 	};
 
 //protected:
@@ -85,6 +86,7 @@ public:
 	char *	mem_; //  size = singleFileSize_ * 2
 	unsigned long long loadOffset_;
 	unsigned long long singleFileSize_;
+
 
 public:
 	static std::mutex outputMut;
