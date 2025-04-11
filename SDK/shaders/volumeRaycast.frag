@@ -12,8 +12,6 @@ uniform int			visible[CHANNELS];
 uniform vec4		channelColors[CHANNELS];
 uniform double		scaleFactor[CHANNELS];
 uniform vec3		camPos;
-uniform uint		lowerLims[3];
-uniform uint		upperLims[3];
 
 uniform int			renderMode;
 
@@ -41,16 +39,6 @@ bool insideVolume(vec3 pos) {
 		cellCoords.z < dimensions.z;
 }
 
-bool insideLimits(ivec3 coord) {
-	return
-		coord.x >= lowerLims[0] &&
-		coord.y >= lowerLims[1] &&
-		coord.z >= lowerLims[2] &&
-		coord.x <= upperLims[0] &&
-		coord.y <= upperLims[1] &&
-		coord.z <= upperLims[2];
-}
-
 bool insideVolumeWorld(vec3 pos) {
 	return
 		pos.x >= 0 && pos.y >= 0 && pos.z >= 0 &&
@@ -69,7 +57,6 @@ bool insideVolumeCell(ivec3 pos) {
 //returns the sampled value of a worldspace position, 0 if outside the bounds
 int sampleVolume(int channel, vec3 pos) {
 	ivec3 cellCoords = volumeCellCoords(pos);
-	if(!insideLimits(cellCoords)) return 0;
 	/*if( cellCoords.x >= 0 &&
 		cellCoords.y >= 0 &&
 		cellCoords.z >= 0 &&

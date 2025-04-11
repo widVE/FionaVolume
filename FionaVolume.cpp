@@ -16,58 +16,6 @@ void uicb(void* data) {
 	mode = (FionaVolume::renderMode)((((uint32_t)mode) + 1) % (uint32_t)FionaVolume::renderMode::renderModeCount);
 }
 
-void writecb(void* data) {
-	FILE* f = fopen("./viewstate", "wb");
-	if (f) {
-		VolumeData dat;
-		memcpy(&dat, data, sizeof(VolumeData));
-		dat.currentFrame = 0;
-		dat.playing = false;
-		fwrite(&dat, 1, sizeof(VolumeData), f);
-		fclose(f);
-	}
-}
-void readcb(void* data) {
-	FILE* f = fopen("./viewstate", "rb");
-	if (f) {
-		fread(data, 1, sizeof(VolumeData), f);
-		fclose(f);
-	}
-}
-void resetcb(void* dat) {
-	VolumeData& data = *(VolumeData*)dat;
-	data.sampleRate = 1.0;
-	data.drawMode = 0;
-
-	data.position[0] = 0.0f;
-	data.position[1] = 0.0f;
-	data.position[2] = 0.0f;
-
-	data.eulerAngles[0] = 0.0f;
-	data.eulerAngles[1] = 0.0f;
-	data.eulerAngles[2] = 0.0f;
-
-	data.scale[0] = 1.0496f;
-	data.scale[1] = 0.5248f;
-	data.scale[2] = 0.445;
-
-	for (int i = 0; i < VOLUME_CHANNELS; i++) {
-		data.color[i][0] = 0.0f;
-		data.color[i][1] = 0.0f;
-		data.color[i][2] = 0.0f;
-		data.color[i][3] = 1.0f;
-		data.visible[i] = true;
-		data.scaleFactor[i] = 0.1;
-	}
-	data.color[0][1] = 1.0f;
-	data.color[0][2] = 1.0f;
-	if (VOLUME_CHANNELS > 1) data.color[1][0] = 1.0f;
-	data.scaleFactor[0] = 20;
-
-	data.playing = 0;
-	data.currentFrame = 0;
-}
-
 FionaVolume::FionaVolume() : FionaScene(),
 pointShader_(0),
 volumeShader_(0),
@@ -83,15 +31,6 @@ volumeRenderTarget_(0)
 {
 	data.sampleRate = 1.0;
 	data.drawMode = 0;
-
-	data.position[0] = 0.0f;
-	data.position[1] = 0.0f;
-	data.position[2] = 0.0f;
-
-	data.eulerAngles[0] = 0.0f;
-	data.eulerAngles[1] = 0.0f;
-	data.eulerAngles[2] = 0.0f;
-
 	data.scale[0] = 1.0496f;
 	data.scale[1] = 0.5248f;
 	data.scale[2] = 0.445;
@@ -111,12 +50,9 @@ volumeRenderTarget_(0)
 		data.visible[i] = true;
 		data.scaleFactor[i] = 0.1;
 	}
-	data.color[0][1] = 1.0f;
-	data.color[0][2] = 1.0f;
-	if(VOLUME_CHANNELS > 1) data.color[1][0] = 1.0f;
-	data.scaleFactor[0] = 500;
-	if(VOLUME_CHANNELS > 1) data.scaleFactor[1] = 500;
-	data.drawMode = (uint32_t)renderMode::renderMax;
+	data.color[0][0] = 1.0f;
+	if(VOLUME_CHANNELS > 1) data.color[1][1] = 1.0f;
+	data.scaleFactor[0] = 20;
 
 	data.playing = 0;
 	data.currentFrame = 0;
@@ -144,26 +80,17 @@ volumeRenderTarget_(0)
 		TwAddVarRW(bar, "Angle X", TW_TYPE_FLOAT, &data.eulerAngles[0], "group=Manipulation min=0 max=360 step=1");
 		TwAddVarRW(bar, "Angle Y", TW_TYPE_FLOAT, &data.eulerAngles[1], "group=Manipulation min=0 max=360 step=1");
 		TwAddVarRW(bar, "Angle Z", TW_TYPE_FLOAT, &data.eulerAngles[2], "group=Manipulation min=0 max=360 step=1");
-		TwAddVarRW(bar, "X-Slice-Lower", TW_TYPE_UINT32, &data.lowerLims[0], "group=Manipulation step=1");
-		TwAddVarRW(bar, "Y-Slice-Lower", TW_TYPE_UINT32, &data.lowerLims[1], "group=Manipulation step=1");
-		TwAddVarRW(bar, "Z-Slice-Lower", TW_TYPE_UINT32, &data.lowerLims[2], "group=Manipulation step=1");
-		TwAddVarRW(bar, "X-Slice-Upper", TW_TYPE_UINT32, &data.upperLims[0], "group=Manipulation step=1");
-		TwAddVarRW(bar, "Y-Slice-Upper", TW_TYPE_UINT32, &data.upperLims[1], "group=Manipulation step=1");
-		TwAddVarRW(bar, "Z-Slice-Upper", TW_TYPE_UINT32, &data.upperLims[2], "group=Manipulation step=1");
+
 
 		TwAddVarRW(bar, "Sample Rate", TW_TYPE_DOUBLE, &data.sampleRate, "group=View min=0.5 max=4 step=0.5");
 		for (int i = 0; i < VOLUME_CHANNELS; i++) TwAddVarRW(bar, ("Channel " + std::to_string(i) + " Visible").c_str(), TW_TYPE_BOOL32, &data.visible[i], "group=View");
 		for (int i = 0; i < VOLUME_CHANNELS; i++) TwAddVarRW(bar, ("Channel " + std::to_string(i) + " Color").c_str(), TW_TYPE_COLOR4F, &data.color[i], "group=View");
-		for (int i = 0; i < VOLUME_CHANNELS; i++) TwAddVarRW(bar, ("Channel " + std::to_string(i) + " Intensity").c_str(), TW_TYPE_DOUBLE, &data.scaleFactor[i], "group=View step=0.5");
+		for (int i = 0; i < VOLUME_CHANNELS; i++) TwAddVarRW(bar, ("Channel " + std::to_string(i) + " Intensity").c_str(), TW_TYPE_DOUBLE, &data.scaleFactor[i], "group=View");
 		TwAddButton(bar, "Cycle Mode", uicb, &data.drawMode, "group=View");
 		TwAddVarRO(bar, "Mode: ", TW_TYPE_STDSTRING, &drawModeStr, "group=View");
 
 		TwAddVarRW(bar, "Playing", TW_TYPE_BOOL32, &data.playing, "group=Playback");
 		TwAddVarRO(bar, "Frame Index", TW_TYPE_UINT32, &readers_[0].fileIndex_, "group=Playback");
-
-		TwAddButton(bar, "Save State", writecb, &data, "group=Interface");
-		TwAddButton(bar, "Load State", readcb, &data, "group=Interface");
-		TwAddButton(bar, "Reset State", resetcb, &data, "group=Interface");
 	}
 
 	for (int i = 0; i < VOLUME_CHANNELS; i++) {
@@ -359,19 +286,6 @@ void FionaVolume::loadVolume(int index, const std::string & fileName) {
 		unsigned long long tSize = res.x*res.y*res.z*currentStacks_[i]->getBytesPerVoxel();
 		readers_[i].preallocateMemory(2, tSize);
 		//reader_.setPaused(false);
-
-		data.lowerLims[0] = 0;
-		data.lowerLims[1] = 0;
-		data.lowerLims[2] = 0;
-		data.upperLims[0] = res.x;
-		data.upperLims[1] = res.y;
-		data.upperLims[2] = res.z;
-		TwDefine(("UIBar/X-Slice-Lower min=0 max=" + std::to_string(res.x)).c_str());
-		TwDefine(("UIBar/Y-Slice-Lower min=0 max=" + std::to_string(res.y)).c_str());
-		TwDefine(("UIBar/Z-Slice-Lower min=0 max=" + std::to_string(res.z)).c_str());
-		TwDefine(("UIBar/X-Slice-Upper min=0 max=" + std::to_string(res.x)).c_str());
-		TwDefine(("UIBar/Y-Slice-Upper min=0 max=" + std::to_string(res.y)).c_str());
-		TwDefine(("UIBar/Z-Slice-Upper min=0 max=" + std::to_string(res.z)).c_str());
 	}
 }
 
@@ -506,13 +420,6 @@ void FionaVolume::render(void) {
 		jvec3 vCavePos = camPos + camOri.rot(fionaConf.headPos);
 		volumeRaycaster_->setUniform("camPos", vCavePos.x, vCavePos.y, vCavePos.z);
 		volumeRaycaster_->setUniform("renderMode", (int)data.drawMode);
-		glUniform1ui(volumeRaycaster_->getUniform("lowerLims[0]"), data.lowerLims[0]);
-		glUniform1ui(volumeRaycaster_->getUniform("lowerLims[1]"), data.lowerLims[1]);
-		glUniform1ui(volumeRaycaster_->getUniform("lowerLims[2]"), data.lowerLims[2]);
-		glUniform1ui(volumeRaycaster_->getUniform("upperLims[0]"), data.upperLims[0]);
-		glUniform1ui(volumeRaycaster_->getUniform("upperLims[1]"), data.upperLims[1]);
-		glUniform1ui(volumeRaycaster_->getUniform("upperLims[2]"), data.upperLims[2]);
-		//glUniform1ui(volumeRaycaster_->getUniform("lowerLims[0]"), 500);
 
 		glDisable(GL_DEPTH_TEST);
 		glDepthMask(GL_FALSE);

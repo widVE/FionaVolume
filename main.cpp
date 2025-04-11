@@ -233,11 +233,11 @@ void keyboard(unsigned int key, int x, int y)
 	}
 }
 
-void joystick(int w, const jvec3& v)
+void joystick(int w, const vec4& v)
 {
 	if(!fionaConf.dualView || _FionaUTIsSingleViewMachine())
 	{
-		curJoy = v;
+		curJoy = jvec3(v.x, v.y, v.z);
 		if(scene) 
 		{
 			scene->updateJoystick(v);
@@ -249,10 +249,10 @@ void joystick(int w, const jvec3& v)
 		//update the first viewer's scene if the second joystick is moved...
 		if(w == 1)
 		{
-			secondCurJoy = v;
+			secondCurJoy = jvec3(v.x, v.y, v.z);
 			if(scene) 
 			{
-				scene->updateJoystick(v);
+				scene->updateJoystick(secondCurJoy);
 			}
 		}
 	}
@@ -417,7 +417,7 @@ int main(int argc, char *argv[])
 	//glutSpecialFunc((GLUTspecialfun)TwEventSpecialGLUT);
 	//TwGLUTModifiersFunc(glutGetModifiers);
 
-	TwWindowSize(glutGet(GLUT_SCREEN_WIDTH), glutGet(GLUT_SCREEN_HEIGHT));
+	TwWindowSize(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 
 	glutMainLoop();
 

@@ -2,7 +2,6 @@
 #include "FionaUT.h"
 #include "FionaUtil.h"
 #include "fromSPIM/SpimStack.h"
-#include <fstream>
 
 std::mutex FionaVolumeReader::outputMut;
 
@@ -74,23 +73,10 @@ DWORD FionaVolumeReader::run()
 				//loadOffset_ += fileSize;
 				fclose(f);
 
-				//swap endianness
-				for (uint64_t i = 0; i < singleFileSize_ / 2; i++) {
-					uint16_t &old = ((uint16_t*)&mem_[loadOffset_])[i];
-					old = (uint16_t)((old & 0xff00) >> 8) | ((old & 0x00ff) << 8);
-				}
-
-				/*if (mem_) {
-					unsigned long long dist[65536];
-					memset(dist, 0, sizeof(dist));
-					for (int i = 0; i < (1024 * 512 * 89); i++) {
-						int index = ((uint16_t*)&mem_[loadOffset_])[i];
-						if (dist[index] != std::numeric_limits<unsigned long long>::max()) dist[index]++;
-					}
-					std::ofstream out("hist.csv");
-					for (int i = 0; i < 65536; i++) {
-						out << (std::to_string(i) + ", " + std::to_string(dist[i]) + "\n");
-					}
+				/*unsigned int dist[65535] = { 0 };
+				for (int i = 0; i < (1024*512*89); i++) {
+					int index = ((uint16_t*)&mem_[loadOffset_])[i];
+					if(dist[index] != 65535) dist[index]++;
 				}*/
 				
 				paused_ = true;

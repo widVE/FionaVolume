@@ -960,8 +960,8 @@ void SpimStack::addSaltPepperNoise(float salt, float pepper, float amount)
 static inline float gauss3D(float  sigma, const glm::vec3& coord)
 {
 	// 3D gaussian function. see http://math.stackexchange.com/questions/434629/3-d-generalization-of-the-gaussian-point-spread-function
-	const float N = 1.0 / sqrt(8.f * pow(sigma, 6.f)*pow(std::_Pi, 3.f));
-	const float e = pow(sigma, 3.f)* pow(std::_Pi * 2.f, 1.5f);
+	const float N = 1.0 / sqrt(8.f * pow(sigma, 6.f)*pow(3.14159f, 3.f));
+	const float e = pow(sigma, 3.f)* pow(3.14159f * 2.f, 1.5f);
 
 	return N * exp(-dot(coord, coord) / e);
 }

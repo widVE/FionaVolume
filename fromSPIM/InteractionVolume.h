@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 //#include <boost/utility.hpp>
+#include <string>
 
 #include "AABB.h"
 

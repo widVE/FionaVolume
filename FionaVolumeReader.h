@@ -87,7 +87,6 @@ public:
 	unsigned long long loadOffset_;
 	unsigned long long singleFileSize_;
 
-
 public:
 	static std::mutex outputMut;
 
